@@ -513,3 +513,12 @@ export const COUNTIES: { name: string; constituencies: string[] }[] = [
     ],
   },
 ];
+
+export const COUNTYNAMES = COUNTIES.map((county) => county.name);
+
+export const CONTITUENCIES: string[] = COUNTIES.reduce(
+  (acc: string[], county) => {
+    return acc.concat(county.constituencies);
+  },
+  []
+);

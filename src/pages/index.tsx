@@ -1,9 +1,12 @@
-import React from 'react'
+import React from "react";
+import { FeaturesCards } from "../components/sections/IntroSection";
 
 function HomePage() {
   return (
-    <div>HomePage</div>
-  )
+    <div>
+      <FeaturesCards />
+    </div>
+  );
 }
 
-export default HomePage
+export default HomePage;

@@ -6,7 +6,11 @@ const { withAnimations } = require("animated-tailwindcss");
 module.exports = withAnimations({
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        brand: "#01FF1F",
+      },
+    },
   },
   plugins: [],
 });
