@@ -1,8 +1,12 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { withAnimations } = require("animated-tailwindcss");
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+
+module.exports = withAnimations({
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {},
   },
   plugins: [],
-};
+});

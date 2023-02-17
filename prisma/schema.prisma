@@ -6,12 +6,40 @@ generator client {
 }
 
 datasource db {
-    provider = "sqlite"
+    provider = "cockroachdb"
     url      = env("DATABASE_URL")
 }
 
-model Example {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+model Flaggers {
+    id       String  @id @unique @default(uuid())
+    code     BigInt  @unique
+    county   String
+    password String
+    Cases    Cases[]
+}
+
+model Cases {
+    id           String   @id @unique @default(uuid())
+    created      DateTime @default(now())
+    updated      DateTime @updatedAt
+    title        String
+    county       String
+    constituency String
+    case_type    String
+    describtion  String
+    image        String
+    seconders    String[]
+    status       Status
+    alleged      String
+    alleged_Role String
+    created_by   Flaggers @relation(fields: [flaggerId], references: [id])
+    flaggerId    String
+}
+
+enum Status {
+    ALLEGATION
+    INVESTIGATION
+    TRIAL
+    CONVICTED
+    CLOSED
 }
