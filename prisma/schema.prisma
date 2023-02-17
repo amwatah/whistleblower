@@ -11,11 +11,12 @@ datasource db {
 }
 
 model Flaggers {
-    id       String  @id @unique @default(uuid())
-    code     BigInt  @unique
-    county   String
-    password String
-    Cases    Cases[]
+    id           String  @id @unique @default(uuid())
+    code         BigInt  @unique
+    county       String
+    constituency String
+    password     String
+    Cases        Cases[]
 }
 
 model Cases {
