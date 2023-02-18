@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import {
   createStyles,
   Badge,
@@ -113,6 +114,13 @@ export function FeaturesCards() {
       <Title order={2} className={classes.title} align="center" mt="sm">
         The Kenyan Integrity Platform
       </Title>
+      <Group position="center" className=" my-1">
+        <img
+          src="images/stop.jpg"
+          alt="stop-corruption"
+          className=" h-52 w-52 animate-tada rounded-full animate-infinite animate-duration-[7s]"
+        />
+      </Group>
 
       <SimpleGrid
         cols={3}
@@ -136,6 +144,7 @@ export function FeaturesCards() {
         with information about corrupt practices, which could help to root out
         corruption in the country
       </Text>
+
       <Center className="logo m-3 mx-auto w-[15vw]">
         <Link href={CREATEPAGE}>
           <Button>BLOW</Button>

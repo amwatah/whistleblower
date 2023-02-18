@@ -1,5 +1,6 @@
 import {
   Button,
+  FileInput,
   Loader,
   Select,
   Stack,
@@ -10,6 +11,7 @@ import { useForm } from "@mantine/form";
 import { openConfirmModal } from "@mantine/modals";
 import { showNotification } from "@mantine/notifications";
 import { GlobalStore } from "../../stores";
+import cameraIcon from "@iconify/icons-mdi/camera";
 import { api } from "../../utils/api";
 import {
   corruptionCases,
@@ -18,7 +20,7 @@ import {
   positions,
 } from "../../utils/datapoints";
 import ConsentDetails from "./ConsentDetails";
-import { ImageZone } from "./ImageZone";
+import { Icon } from "@iconify/react";
 
 function Reportform() {
   const flagCase = api.CASES_ENDPOINT.createCase.useMutation();
@@ -93,13 +95,14 @@ function Reportform() {
   }
 
   return (
-    <Stack spacing="xs" className="  m-1 ">
+    <Stack spacing="xs" className="  m-3 mx-auto sm:w-[50vw] ">
       <form
         onSubmit={caseform.onSubmit(() => {
           handleCase();
         })}
       >
         <Button
+          fullWidth
           onClick={() =>
             openConfirmModal({
               children: <ConsentDetails />,
@@ -164,9 +167,16 @@ function Reportform() {
           placeholder="Be as detailed as possible .Revelance is based on info provided"
           {...caseform.getInputProps("case_describtion")}
         />
+        <FileInput
+          placeholder="Upload Image"
+          size="xl"
+          className=" my-2"
+          icon={<Icon icon={cameraIcon} className=" text-4xl" />}
+        />
 
-        <ImageZone className=" my-3 " />
-        <Button type="submit">FLAG SCANDAL</Button>
+        <Button type="submit" fullWidth>
+          FLAG SCANDAL
+        </Button>
       </form>
     </Stack>
   );
