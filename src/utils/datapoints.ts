@@ -522,3 +522,8 @@ export const CONTITUENCIES: string[] = COUNTIES.reduce(
   },
   []
 );
+
+export function findConstituencyByName(name: string): string[] | undefined {
+  const result = COUNTIES.find((county) => county.name === name);
+  return result ? result.constituencies : undefined;
+}

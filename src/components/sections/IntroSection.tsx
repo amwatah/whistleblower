@@ -114,6 +114,14 @@ export function FeaturesCards() {
         The Kenyan Integrity Platform
       </Title>
 
+      <SimpleGrid
+        cols={3}
+        spacing="xl"
+        mt={50}
+        breakpoints={[{ maxWidth: "md", cols: 1 }]}
+      >
+        {features}
+      </SimpleGrid>
       <Text
         color="dimmed"
         className={classes.description}
@@ -128,15 +136,6 @@ export function FeaturesCards() {
         with information about corrupt practices, which could help to root out
         corruption in the country
       </Text>
-
-      <SimpleGrid
-        cols={3}
-        spacing="xl"
-        mt={50}
-        breakpoints={[{ maxWidth: "md", cols: 1 }]}
-      >
-        {features}
-      </SimpleGrid>
       <Center className="logo m-3 mx-auto w-[15vw]">
         <Link href={CREATEPAGE}>
           <Button>BLOW</Button>

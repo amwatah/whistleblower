@@ -27,22 +27,6 @@ function MainLayout({ children }: MainLayoutProps) {
         theme={{
           /** Put your mantine theme override here */
           colorScheme: activetheme,
-          colors: {
-            brand: [
-              "#F5FFF7",
-              "#94FCA0",
-              "#44FC5A",
-              "#01FF1F",
-              "#03BD19",
-              "#048C14",
-              "#056710",
-              "#054C0D",
-              "#04380A",
-              "#042A08",
-            ],
-          },
-          primaryColor: "brand",
-          primaryShade: 3,
         }}
       >
         <ModalsProvider>

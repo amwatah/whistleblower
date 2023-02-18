@@ -1,101 +1,183 @@
-import React, { useState } from "react";
+import { useToggle, upperFirst } from "@mantine/hooks";
 import { useForm } from "@mantine/form";
+import { Center, PaperProps } from "@mantine/core";
+import { Loader, NumberInput, Select } from "@mantine/core";
 import {
-  Button,
-  Group,
-  NumberInput,
   PasswordInput,
-  SegmentedControl,
-  Select,
+  Text,
+  Paper,
+  Group,
+  Button,
+  Divider,
+  Checkbox,
+  Anchor,
+  Stack,
 } from "@mantine/core";
-import { CONTITUENCIES, COUNTIES, COUNTYNAMES } from "../../utils/datapoints";
+import { COUNTYNAMES, findConstituencyByName } from "../../utils/datapoints";
+import { api } from "../../utils/api";
+import { showNotification } from "@mantine/notifications";
+import { GlobalStore } from "../../stores";
+import { useRouter } from "next/router";
+import { HOMEPAGE } from "../../utils/routepaths";
 
-function AuthPage() {
-  const [authState, setAuthState] = useState<"login" | "register">("login");
-  const regiterform = useForm({
+export default function AuthenticationForm(props: PaperProps) {
+  const register = api.FLAGGERS_ENDPOINT.register.useMutation();
+  const login = api.FLAGGERS_ENDPOINT.login.useMutation();
+  const [type, toggle] = useToggle(["login", "register"]);
+  const router = useRouter();
+  const form = useForm({
     initialValues: {
       code: 0,
+      county: "",
+      constituency: "",
       password: "",
-      county: "Nairobi",
-      constituency: "Langata constituency",
-      termsOfService: false,
+      terms: true,
     },
 
     validate: {
       code: (val) =>
-        val.toString().length < 10 ? "Too short , must be 10 digits" : null,
+        val.toString().length <= 9
+          ? "Too short must be atleast 10 characters"
+          : null,
       password: (val) =>
-        val.toString().length < 10 ? "Too short , must be 10 digits" : null,
+        val.length <= 6
+          ? "Password should include at least 6 characters"
+          : null,
     },
   });
-  const loginform = useForm({
-    initialValues: {
-      code: 0,
-      password: "",
-    },
+  function handleAuth() {
+    if (type === "register") {
+      register.mutate({
+        code: form.values.code,
+        county: form.values.county,
+        constituency: form.values.constituency,
+        password: form.values.password,
+      });
 
-    validate: {
-      code: (val) =>
-        val.toString().length < 10 ? "Too short , must be 10 digits" : null,
-      password: (val) =>
-        val.toString().length < 10 ? "Too short , must be 10 digits" : null,
-    },
-  });
+      if (register.error) {
+        showNotification({
+          title: "ERROR",
+          message: register.error.message,
+        });
+      }
+      if (register.isSuccess && register.data) {
+        showNotification({
+          title: "Account created  , login",
+          message: register.data.code.toString(),
+        });
+      }
+    }
+    if (type === "login") {
+      login.mutate({
+        code: form.values.code,
+        password: form.values.password,
+      });
+      if (login.data?.code) {
+        showNotification({
+          title: "Welcome back",
+          message: login.data.code.toString(),
+        });
+        GlobalStore.userCode = login.data.code;
+        GlobalStore.userConstituency = login.data.constituency;
+        GlobalStore.userCounty = login.data.county;
+        GlobalStore.userId = login.data.id;
+        void router.push(HOMEPAGE);
+      } else {
+        showNotification({
+          title: "Invalid Credetials",
+          message: "Try again",
+        });
+      }
+    }
+  }
+
+  if (register.isLoading || login.isLoading) {
+    return (
+      <div className=" wfull flex h-full flex-col items-center justify-center ">
+        <Loader variant="bars" size="lg" />
+      </div>
+    );
+  }
   return (
-    <div>
-      {authState === "login" && (
-        <div className="">
-          <form onSubmit={loginform.onSubmit((values) => console.log(values))}>
+    <Center className=" container mx-auto h-screen w-screen">
+      <Paper radius="md" p="xl" withBorder {...props}>
+        <Text size="lg" weight={500}>
+          Welcome to Whistle-Kenya, {type}
+        </Text>
+
+        <Divider
+          label="make sure to save your details securely"
+          labelPosition="center"
+          my="lg"
+        />
+
+        <form
+          onSubmit={form.onSubmit(() => {
+            handleAuth();
+          })}
+        >
+          <Stack>
             <NumberInput
-              {...regiterform.getInputProps("code")}
-              label="10 DIGIT SECRET CODE"
+              required
+              label="Your 10 digit secret code"
               placeholder="1234567890"
-            />
-            <PasswordInput
-              {...regiterform.getInputProps("password")}
-              label="10 DIGIT SECRET CODE"
-              placeholder="1234567890"
+              {...form.getInputProps("code")}
             />
 
-            <Button type="submit">Submit</Button>
-          </form>
-        </div>
-      )}
-      {authState === "register" && (
-        <div className="">
-          <form onSubmit={loginform.onSubmit((values) => console.log(values))}>
-            <NumberInput
-              {...regiterform.getInputProps("code")}
-              label="10 DIGIT SECRET CODE"
-              placeholder="1234567890"
-            />
-            <Select
-              {...regiterform.getInputProps("county")}
-              label="YOUR COUNTY"
-              placeholder="Pick one"
-              searchable
-              nothingFound="No options"
-              data={COUNTYNAMES}
-            />
-            <Select
-              {...regiterform.getInputProps("constituency")}
-              label="YOUR CONTITUENCY"
-              placeholder="Pick one"
-              searchable
-              nothingFound="No options"
-              data={CONTITUENCIES}
-            />
             <PasswordInput
-              {...regiterform.getInputProps("password")}
-              label="10 DIGIT SECRET CODE"
-              placeholder="1234567890"
+              required
+              label="Password"
+              placeholder="Your password"
+              {...form.getInputProps("password")}
             />
-            <Button type="submit">Submit</Button>
-          </form>
-        </div>
-      )}
-    </div>
+            {type === "register" && (
+              <>
+                <Select
+                  label="Your County"
+                  placeholder="Nairobi County"
+                  searchable
+                  {...form.getInputProps("county")}
+                  data={COUNTYNAMES}
+                />
+                {form.values.county.length > 7 && (
+                  <Select
+                    label="Your Constituency"
+                    placeholder="Langata Constituency"
+                    searchable
+                    {...form.getInputProps("constituency")}
+                    data={findConstituencyByName(form.values.county) || []}
+                  />
+                )}
+              </>
+            )}
+
+            {type === "register" && (
+              <Checkbox
+                label="I accept terms and conditions"
+                checked={form.values.terms}
+                onChange={(event) =>
+                  form.setFieldValue("terms", event.currentTarget.checked)
+                }
+              />
+            )}
+          </Stack>
+
+          <Group position="apart" mt="xl">
+            <Anchor
+              component="button"
+              type="button"
+              color="dimmed"
+              onClick={() => toggle()}
+              size="xs"
+            >
+              {type === "register"
+                ? "Already have an account? Login"
+                : "Don't have an account? Register"}
+            </Anchor>
+            <Button type="submit">{upperFirst(type)}</Button>
+          </Group>
+        </form>
+      </Paper>
+    </Center>
   );
 }
-
-export default AuthPage;

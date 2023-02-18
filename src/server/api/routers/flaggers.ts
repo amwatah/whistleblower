@@ -29,7 +29,7 @@ export const FlaggersRouter = createTRPCRouter({
         password: z.string(),
       })
     )
-    .query(async ({ input, ctx }) => {
+    .mutation(async ({ input, ctx }) => {
       const retrievedUser = await ctx.prisma.flaggers.findFirst({
         where: {
           code: input.code,

@@ -1,5 +1,5 @@
-import { Menu, Paper } from "@mantine/core";
-import React from "react";
+import { Burger, Menu, Paper } from "@mantine/core";
+import React, { useState } from "react";
 import { Icon } from "@iconify/react";
 import microsoftXboxControllerMenu from "@iconify/icons-mdi/microsoft-xbox-controller-menu";
 import homeIcon from "@iconify/icons-mdi/home";
@@ -16,6 +16,7 @@ import {
 } from "../../utils/routepaths";
 
 const MainMenu = () => {
+  const [menuOpen, setMenuOpen] = useState(false);
   const router = useRouter();
   return (
     <Paper
@@ -26,10 +27,12 @@ const MainMenu = () => {
     >
       <Menu zIndex={200000}>
         <Menu.Target>
-          <Icon
-            icon={microsoftXboxControllerMenu}
-            className=" z-[2000000] text-3xl text-brand"
-          />
+          <Burger
+            opened={menuOpen}
+            onClick={() => (menuOpen ? setMenuOpen(false) : setMenuOpen(true))}
+          >
+            <Icon icon={microsoftXboxControllerMenu} />
+          </Burger>
         </Menu.Target>
         <Menu.Dropdown>
           <Menu.Label>Select a destination</Menu.Label>

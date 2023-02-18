@@ -12,7 +12,7 @@ datasource db {
 
 model Flaggers {
     id           String  @id @unique @default(uuid())
-    code         BigInt  @unique
+    code         Int     @unique
     county       String
     constituency String
     password     String
@@ -35,6 +35,7 @@ model Cases {
     alleged_Role String
     created_by   Flaggers @relation(fields: [flaggerId], references: [id])
     flaggerId    String
+    validity     Float    @default(0)
 }
 
 enum Status {
