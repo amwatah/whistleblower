@@ -527,3 +527,89 @@ export function findConstituencyByName(name: string): string[] | undefined {
   const result = COUNTIES.find((county) => county.name === name);
   return result ? result.constituencies : undefined;
 }
+
+export const corruptionCases: {
+  value: string;
+  title: string;
+  description: string;
+}[] = [
+  {
+    value: "Embezzlement",
+    title: "Embezzlement",
+    description:
+      "Theft or misappropriation of funds by a person who controls those funds",
+  },
+  {
+    value: "Bribery",
+    title: "Bribery",
+    description:
+      "Offering, giving, receiving or soliciting something of value in exchange for a particular action or decision",
+  },
+  {
+    value: "Nepotism",
+    title: "Nepotism",
+    description:
+      "Favoritism granted to relatives or friends, without regard to their qualifications",
+  },
+  {
+    value: "Fraud",
+    title: "Fraud",
+    description:
+      "Deception, misrepresentation, or cheating intended to result in personal gain or to cause a loss",
+  },
+  {
+    value: "Conflict of interest",
+    title: "Conflict of interest",
+    description:
+      "Using a position of power to benefit oneself or a related party rather than the organization or the public",
+  },
+  {
+    value: "Kickbacks",
+    title: "Kickbacks",
+    description:
+      "Illicit payments or gifts given to a person in exchange for favorable treatment",
+  },
+  {
+    value: "Money laundering",
+    title: "Money laundering",
+    description:
+      "Concealing the proceeds of illegal activity by making them appear legitimate",
+  },
+  {
+    value: "Insider trading",
+    title: "Insider trading",
+    description:
+      "Trading securities based on non-public information that could affect the value of those securities",
+  },
+
+  {
+    value: "Abuse of power",
+    title: "Abuse of power",
+    description:
+      "Using one's position of authority to exert control or influence for personal gain or to harm others",
+  },
+
+  {
+    value: "Extortion",
+    title: "Extortion",
+    description:
+      "The act of obtaining something, such as money, through force or threats",
+  },
+  {
+    value: "Other",
+    title: "Other",
+    description: "Any other form of corruption case",
+  },
+];
+
+export const positions: string[] = [
+  "PRESIDENT",
+  "GOVERNOR",
+  "SENATOR",
+  "MP",
+  "CABINET SECRETARY",
+  "WOMEN REP",
+  "MCA",
+  "CIVIL SERVANT",
+  "OTHER",
+];
