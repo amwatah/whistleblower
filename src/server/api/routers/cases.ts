@@ -1,4 +1,5 @@
 import { string, z } from "zod";
+import { supabase } from "../../../supabase";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 // id           String   @id @unique @default(uuid())
 // created      DateTime @default(now())
@@ -32,26 +33,24 @@ export const CasesRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const newCase = await ctx.prisma.cases.create({
-        data: {
-          title: input.title,
-          describtion: input.describtion,
-          county: input.county,
-          constituency: input.constituency,
-          case_type: input.case_type,
-          alleged: input.alleged,
-          alleged_Role: input.alleged_role,
-          flaggerId: input.flagged_by,
-          image: input.image_url,
-          status: "ALLEGATION",
-        },
+      const { data: createdCase } = await supabase.from("Cases").insert({
+        title: input.title,
+        describtion: input.describtion,
+        county: input.county,
+        constituency: input.constituency,
+        case_type: input.case_type,
+        alleged: input.alleged,
+        alleged_Role: input.alleged_role,
+        flaggerId: input.flagged_by,
+        image: input.image_url,
+        status: "ALLEGATION",
       });
-      return newCase;
+      return createdCase;
     }),
 
   getAllCases: publicProcedure.query(async ({ ctx }) => {
-    const cases = await ctx.prisma.cases.findMany();
-    return cases;
+    const { data: AllCases } = await supabase.from("Cases").select("*");
+    return AllCases;
   }),
   dropCase: publicProcedure
     .input(
@@ -60,12 +59,12 @@ export const CasesRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const caseToDrop = await ctx.prisma.cases.delete({
-        where: {
-          id: input.case_id,
-        },
-      });
-      return caseToDrop;
+      const { data: deletedCase } = await supabase
+        .from("Cases")
+        .delete()
+        .eq("id", input.case_id);
+
+      return deletedCase;
     }),
   changeCaseStatus: publicProcedure
     .input(
@@ -81,24 +80,23 @@ export const CasesRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const updatedCase = await ctx.prisma.cases.update({
-        where: {
-          id: input.case_id,
-        },
-        data: {
+      const { data: updatedCase } = await supabase
+        .from("Cases")
+        .update({
           status: input.newStatus,
-        },
-      });
+        })
+        .eq("id", input.case_id);
       return updatedCase;
     }),
   getCaseById: publicProcedure
     .input(z.object({ case_id: z.string() }))
     .query(async ({ input, ctx }) => {
-      const foundCase = await ctx.prisma.cases.findFirst({
-        where: {
-          id: input.case_id,
-        },
-      });
+      const { data: foundCase } = await supabase
+        .from("Cases")
+        .select("*")
+        .eq("id", input.case_id)
+        .single();
+
       return foundCase;
     }),
   getCaseByFilter: publicProcedure
@@ -110,27 +108,24 @@ export const CasesRouter = createTRPCRouter({
     )
     .query(async ({ ctx, input }) => {
       if (input.filter_by === "COUNTY") {
-        const cases = await ctx.prisma.cases.findMany({
-          where: {
-            county: input.filter_value,
-          },
-        });
+        const { data: cases } = await supabase
+          .from("Cases")
+          .select("*")
+          .eq("county", input.filter_value);
         return cases;
       }
       if (input.filter_by === "CONSTITUENCY") {
-        const cases = await ctx.prisma.cases.findMany({
-          where: {
-            constituency: input.filter_value,
-          },
-        });
+        const { data: cases } = await supabase
+          .from("Cases")
+          .select("*")
+          .eq("constituency", input.filter_value);
         return cases;
       }
       if (input.filter_by === "TYPE") {
-        const cases = await ctx.prisma.cases.findMany({
-          where: {
-            case_type: input.filter_value,
-          },
-        });
+        const { data: cases } = await supabase
+          .from("Cases")
+          .select("*")
+          .eq("case_type", input.filter_value);
         return cases;
       }
     }),

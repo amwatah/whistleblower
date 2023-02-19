@@ -1,13 +1,14 @@
 /* eslint-disable @next/next/no-img-element */
-import { Group, Rating } from "@mantine/core";
+import { Group, Paper, Rating } from "@mantine/core";
 import type { Cases } from "@prisma/client";
-import Link from "next/link";
+import { useRouter } from "next/router";
 import React from "react";
 import { STATSPAGE } from "../../utils/routepaths";
 
 function CaseCardMini(caseItem: Cases) {
+  const router = useRouter();
   return (
-    <Link href={`${STATSPAGE}/${caseItem.id}`}>
+    <Paper onClick={() => void router.push(`${STATSPAGE}/${caseItem.id}`)}>
       <div className=" m-2 flex w-full flex-col leading-[5px]  shadow-2xl">
         <img
           src={caseItem.image}
@@ -28,7 +29,7 @@ function CaseCardMini(caseItem: Cases) {
           <p className="text-[12px]"> {caseItem.constituency}</p>
         </Group>
       </div>
-    </Link>
+    </Paper>
   );
 }
 

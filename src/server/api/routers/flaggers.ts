@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { supabase } from "../../../supabase";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
 export const FlaggersRouter = createTRPCRouter({
@@ -12,15 +13,15 @@ export const FlaggersRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const createdFlagger = await ctx.prisma.flaggers.create({
-        data: {
+      const { data } = await supabase.from("Flaggers").insert([
+        {
           code: input.code,
           password: input.password,
           county: input.county,
           constituency: input.constituency,
         },
-      });
-      return createdFlagger;
+      ]);
+      return data;
     }),
   login: publicProcedure
     .input(
@@ -30,13 +31,13 @@ export const FlaggersRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const retrievedUser = await ctx.prisma.flaggers.findFirst({
-        where: {
-          code: input.code,
-          password: input.password,
-        },
-      });
-      return retrievedUser;
+      const { data: user } = await supabase
+        .from("Flaggers")
+        .select("*")
+        .eq("code", input.code)
+        .eq("password", input.password)
+        .single();
+      return user;
     }),
 
   deleteAccount: publicProcedure
@@ -46,11 +47,11 @@ export const FlaggersRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const accountToDelete = await ctx.prisma.flaggers.delete({
-        where: {
-          code: input.code,
-        },
-      });
+      const { data: accountToDelete } = await supabase
+        .from("Flaggers")
+        .delete()
+        .eq("code", input.code);
+
       return accountToDelete;
     }),
 });
