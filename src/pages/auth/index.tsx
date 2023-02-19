@@ -93,7 +93,7 @@ export default function AuthenticationForm(props: PaperProps) {
 
   if (register.isLoading || login.isLoading) {
     return (
-      <div className=" wfull flex h-full flex-col items-center justify-center ">
+      <div className=" flex h-full w-full flex-col items-center justify-center ">
         <Loader variant="bars" size="lg" />
       </div>
     );
