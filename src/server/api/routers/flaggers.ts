@@ -12,15 +12,16 @@ export const FlaggersRouter = createTRPCRouter({
         constituency: z.string(),
       })
     )
-    .mutation(async ({ input, ctx }) => {
-      const { data } = await supabase.from("Flaggers").insert([
-        {
+    .mutation(async ({ input }) => {
+      const { data } = await supabase
+        .from("Flaggers")
+        .insert({
           code: input.code,
           password: input.password,
           county: input.county,
           constituency: input.constituency,
-        },
-      ]);
+        })
+        .select("*");
       return data;
     }),
   login: publicProcedure
@@ -30,7 +31,7 @@ export const FlaggersRouter = createTRPCRouter({
         password: z.string(),
       })
     )
-    .mutation(async ({ input, ctx }) => {
+    .mutation(async ({ input }) => {
       const { data: user } = await supabase
         .from("Flaggers")
         .select("*")
@@ -46,7 +47,7 @@ export const FlaggersRouter = createTRPCRouter({
         code: z.number(),
       })
     )
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ input }) => {
       const { data: accountToDelete } = await supabase
         .from("Flaggers")
         .delete()
