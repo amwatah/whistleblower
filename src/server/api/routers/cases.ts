@@ -62,7 +62,8 @@ export const CasesRouter = createTRPCRouter({
       const { data: deletedCase } = await supabase
         .from("Cases")
         .delete()
-        .eq("id", input.case_id);
+        .eq("id", input.case_id)
+        .select("*");
 
       return deletedCase;
     }),
@@ -85,12 +86,13 @@ export const CasesRouter = createTRPCRouter({
         .update({
           status: input.newStatus,
         })
-        .eq("id", input.case_id);
+        .eq("id", input.case_id)
+        .select("*");
       return updatedCase;
     }),
   getCaseById: publicProcedure
     .input(z.object({ case_id: z.string() }))
-    .query(async ({ input, ctx }) => {
+    .query(async ({ input }) => {
       const { data: foundCase } = await supabase
         .from("Cases")
         .select("*")
@@ -106,7 +108,7 @@ export const CasesRouter = createTRPCRouter({
         filter_value: z.string(),
       })
     )
-    .query(async ({ ctx, input }) => {
+    .query(async ({ input }) => {
       if (input.filter_by === "COUNTY") {
         const { data: cases } = await supabase
           .from("Cases")
