@@ -21,7 +21,7 @@ export interface Database {
           flaggerId: string;
           id: string;
           image: string;
-          seconders: string[] | null;
+          seconders: string[];
           status: string;
           title: string;
           updated_at: string | null;
@@ -38,7 +38,7 @@ export interface Database {
           flaggerId: string;
           id?: string;
           image: string;
-          seconders?: string[] | null;
+          seconders: string[];
           status: string;
           title: string;
           updated_at?: string | null;
@@ -55,7 +55,7 @@ export interface Database {
           flaggerId?: string;
           id?: string;
           image?: string;
-          seconders?: string[] | null;
+          seconders?: string[];
           status?: string;
           title?: string;
           updated_at?: string | null;

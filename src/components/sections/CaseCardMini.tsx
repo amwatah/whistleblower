@@ -5,7 +5,22 @@ import { useRouter } from "next/router";
 import React from "react";
 import { STATSPAGE } from "../../utils/routepaths";
 
-function CaseCardMini(caseItem: Cases) {
+interface CaseCardMiniProps {
+  id: string;
+  title: string;
+  county: string;
+  constituency: string;
+  case_type: string;
+  describtion: string;
+  image: string;
+  seconders: string[] | null;
+  status: string;
+  alleged: string;
+  alleged_Role: string;
+  flaggerId: string;
+  validity: number;
+}
+function CaseCardMini(caseItem: CaseCardMiniProps) {
   const router = useRouter();
   return (
     <Paper onClick={() => void router.push(`${STATSPAGE}/${caseItem.id}`)}>

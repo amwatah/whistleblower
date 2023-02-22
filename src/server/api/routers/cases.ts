@@ -32,23 +32,27 @@ export const CasesRouter = createTRPCRouter({
         image_url: z.string(),
       })
     )
-    .mutation(async ({ input, ctx }) => {
-      const { data: createdCase } = await supabase.from("Cases").insert({
-        title: input.title,
-        describtion: input.describtion,
-        county: input.county,
-        constituency: input.constituency,
-        case_type: input.case_type,
-        alleged: input.alleged,
-        alleged_Role: input.alleged_role,
-        flaggerId: input.flagged_by,
-        image: input.image_url,
-        status: "ALLEGATION",
-      });
+    .mutation(async ({ input }) => {
+      const { data: createdCase } = await supabase
+        .from("Cases")
+        .insert({
+          title: input.title,
+          describtion: input.describtion,
+          county: input.county,
+          constituency: input.constituency,
+          case_type: input.case_type,
+          alleged: input.alleged,
+          alleged_Role: input.alleged_role,
+          flaggerId: input.flagged_by,
+          image: input.image_url,
+          status: "ALLEGATION",
+          seconders: [],
+        })
+        .select("*");
       return createdCase;
     }),
 
-  getAllCases: publicProcedure.query(async ({ ctx }) => {
+  getAllCases: publicProcedure.query(async () => {
     const { data: AllCases } = await supabase.from("Cases").select("*");
     return AllCases;
   }),
@@ -58,7 +62,7 @@ export const CasesRouter = createTRPCRouter({
         case_id: z.string(),
       })
     )
-    .mutation(async ({ input, ctx }) => {
+    .mutation(async ({ input }) => {
       const { data: deletedCase } = await supabase
         .from("Cases")
         .delete()
@@ -80,7 +84,7 @@ export const CasesRouter = createTRPCRouter({
         ]),
       })
     )
-    .mutation(async ({ input, ctx }) => {
+    .mutation(async ({ input }) => {
       const { data: updatedCase } = await supabase
         .from("Cases")
         .update({
@@ -89,6 +93,32 @@ export const CasesRouter = createTRPCRouter({
         .eq("id", input.case_id)
         .select("*");
       return updatedCase;
+    }),
+
+  secondCase: publicProcedure
+    .input(
+      z.object({
+        caseId: z.string(),
+        description: z.string(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const { data: caseTosecond } = await supabase
+        .from("Cases")
+        .select("*")
+        .eq("id", input.caseId)
+        .single();
+      if (caseTosecond) {
+        const seconders = [...caseTosecond.seconders, input.description];
+        const { data: updatedCase } = await supabase
+          .from("Cases")
+          .update({
+            seconders: seconders,
+          })
+          .eq("id", input.caseId)
+          .select("*");
+        return updatedCase;
+      }
     }),
   getCaseById: publicProcedure
     .input(z.object({ case_id: z.string() }))
