@@ -21,7 +21,8 @@ export const FlaggersRouter = createTRPCRouter({
           county: input.county,
           constituency: input.constituency,
         })
-        .select("*");
+        .select("*")
+        .single();
       return data;
     }),
   login: publicProcedure

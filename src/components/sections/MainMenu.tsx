@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import {
   CREATEPAGE,
   HOMEPAGE,
+  NEWSPAGE,
   PROFILEPAGE,
   STATSPAGE,
 } from "../../utils/routepaths";
@@ -56,7 +57,7 @@ const MainMenu = () => {
           </Menu.Item>
           <Menu.Item
             icon={<Icon icon={newspaperVariantMultiple} />}
-            onClick={() => void router.push(STATSPAGE)}
+            onClick={() => void router.push(NEWSPAGE)}
           >
             NEWS
           </Menu.Item>

@@ -1,6 +1,7 @@
 import { useToggle, upperFirst } from "@mantine/hooks";
 import { useForm } from "@mantine/form";
-import { Center, PaperProps } from "@mantine/core";
+import type { PaperProps } from "@mantine/core";
+import { Center } from "@mantine/core";
 import { Loader, NumberInput, Select } from "@mantine/core";
 import {
   PasswordInput,
@@ -63,7 +64,7 @@ export default function AuthenticationForm(props: PaperProps) {
       if (register.isSuccess && register.data) {
         showNotification({
           title: "Account created  , login",
-          message: register.data.code.toString(),
+          message: register.data.code,
         });
       }
     }
@@ -72,7 +73,7 @@ export default function AuthenticationForm(props: PaperProps) {
         code: form.values.code,
         password: form.values.password,
       });
-      if (login.data?.code) {
+      if (login.data) {
         showNotification({
           title: "Welcome back",
           message: login.data.code.toString(),
@@ -82,10 +83,11 @@ export default function AuthenticationForm(props: PaperProps) {
         GlobalStore.userCounty = login.data.county;
         GlobalStore.userId = login.data.id;
         void router.push(HOMEPAGE);
-      } else {
+      }
+      if (login.isSuccess && !login.data) {
         showNotification({
-          title: "Invalid Credetials",
-          message: "Try again",
+          title: "INVALID CREDENTIALS",
+          message: "check your code and password  the try again",
         });
       }
     }
