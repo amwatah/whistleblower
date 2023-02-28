@@ -26,12 +26,12 @@ const MainMenu = () => {
       }}
       className=" fixed top-0 left-0 m-1"
     >
-      <Menu zIndex={200000}>
+      <Menu
+        zIndex={200000}
+        onChange={() => (menuOpen ? setMenuOpen(false) : setMenuOpen(true))}
+      >
         <Menu.Target>
-          <Burger
-            opened={menuOpen}
-            onClick={() => (menuOpen ? setMenuOpen(false) : setMenuOpen(true))}
-          >
+          <Burger opened={menuOpen}>
             <Icon icon={microsoftXboxControllerMenu} />
           </Burger>
         </Menu.Target>
