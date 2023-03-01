@@ -1,5 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
-import { Accordion, Button, Group, Loader, Rating, Text } from "@mantine/core";
+import {
+  Accordion,
+  Badge,
+  Button,
+  Group,
+  Loader,
+  Rating,
+  Text,
+} from "@mantine/core";
 import { useRouter } from "next/router";
 import React from "react";
 import whistleIcon from "@iconify/icons-mdi/whistle";
@@ -7,6 +15,7 @@ import { api } from "../../utils/api";
 import { Icon } from "@iconify/react";
 import { openModal } from "@mantine/modals";
 import SecondCaseModal from "../../components/sections/SecondCaseModal";
+import stringSimilarity from "string-similarity";
 
 function CaseInfoPage() {
   const router = useRouter();
@@ -56,12 +65,43 @@ function CaseInfoPage() {
                   </Accordion.Control>
                   <Accordion.Panel>{caseItem.describtion}</Accordion.Panel>
                 </Accordion.Item>
+                {caseItem.seconders.length > 0 && (
+                  <Accordion.Item value="best">
+                    <Accordion.Control>
+                      <Text color="green" className=" font-bold">
+                        WHISTLEBLOWERS : AI BEST MATCH :{" "}
+                        <Badge>
+                          {stringSimilarity.findBestMatch(
+                            caseItem.describtion,
+                            caseItem.seconders
+                          ).bestMatch.rating * 100}
+                          % Match
+                        </Badge>
+                      </Text>
+                    </Accordion.Control>
+                    <Accordion.Panel>
+                      {
+                        stringSimilarity.findBestMatch(
+                          caseItem.describtion,
+                          caseItem.seconders
+                        ).bestMatch.target
+                      }
+                    </Accordion.Panel>
+                  </Accordion.Item>
+                )}
 
                 {caseItem.seconders?.map((description, index) => (
                   <Accordion.Item value={index.toString()} key={index}>
                     <Accordion.Control>
                       <Text className=" font-bold">
-                        ANONYMOUS WHISTLEBLOWER {index + 1}
+                        ANONYMOUS WHISTLEBLOWER : {index + 1} AI SCORE :{" "}
+                        <Badge>
+                          {stringSimilarity.compareTwoStrings(
+                            caseItem.describtion,
+                            description
+                          ) * 100}
+                          %
+                        </Badge>
                       </Text>
                     </Accordion.Control>
                     <Accordion.Panel>{description}</Accordion.Panel>

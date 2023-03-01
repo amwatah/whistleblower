@@ -1,5 +1,7 @@
 import { Button, Center, Loader, Stack, Textarea } from "@mantine/core";
+import { showNotification } from "@mantine/notifications";
 import React, { useState } from "react";
+import { GlobalStore } from "../../stores";
 import { api } from "../../utils/api";
 
 interface SecondCaseModalProps {
@@ -21,6 +23,9 @@ function SecondCaseModal({ case_id }: SecondCaseModalProps) {
           secondCase.mutate({
             caseId: case_id,
             description: allegation,
+          });
+          showNotification({
+            message: "Your feedback has been added, Thank you",
           });
         }}
       >
