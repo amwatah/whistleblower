@@ -13,7 +13,7 @@ interface CaseCardMiniProps {
   case_type: string;
   describtion: string;
   image: string;
-  seconders: string[] | null;
+  seconders: string[];
   status: string;
   alleged: string;
   alleged_Role: string;
@@ -34,7 +34,22 @@ function CaseCardMini(caseItem: CaseCardMiniProps) {
         <Group position="apart" className=" px-2">
           <p className=" text-[12px] font-bold">{caseItem.title}</p>
         </Group>
-        <Rating defaultValue={caseItem.validity} readOnly />
+        <Rating
+          defaultValue={
+            caseItem.seconders.length >= 5
+              ? 5
+              : caseItem.seconders.length === 4
+              ? 4
+              : caseItem.seconders.length === 3
+              ? 5
+              : caseItem.seconders.length === 2
+              ? 2
+              : caseItem.seconders.length === 1
+              ? 1
+              : 0
+          }
+          readOnly
+        />
         <Group position="apart" className=" px-2">
           <p className="text-[12px]">{caseItem.alleged}</p>
           <p className="text-[12px]">{caseItem.alleged_Role}</p>

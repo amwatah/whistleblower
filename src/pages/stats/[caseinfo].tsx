@@ -16,6 +16,7 @@ import { Icon } from "@iconify/react";
 import { openModal } from "@mantine/modals";
 import SecondCaseModal from "../../components/sections/SecondCaseModal";
 import stringSimilarity from "string-similarity";
+import { GlobalStore } from "../../stores";
 
 function CaseInfoPage() {
   const router = useRouter();
@@ -47,7 +48,22 @@ function CaseInfoPage() {
               <Group position="apart" className=" px-2">
                 <p className=" text-[12px] font-bold">{caseItem.title}</p>
               </Group>
-              <Rating defaultValue={caseItem.validity} readOnly />
+              <Rating
+                defaultValue={
+                  caseItem.seconders.length >= 5
+                    ? 5
+                    : caseItem.seconders.length === 4
+                    ? 4
+                    : caseItem.seconders.length === 3
+                    ? 5
+                    : caseItem.seconders.length === 2
+                    ? 2
+                    : caseItem.seconders.length === 1
+                    ? 1
+                    : 0
+                }
+                readOnly
+              />
               <Group position="apart" className=" px-2">
                 <p className="text-[12px]">{caseItem.alleged}</p>
                 <p className="text-[12px]">{caseItem.alleged_Role}</p>
@@ -63,7 +79,15 @@ function CaseInfoPage() {
                       PRIMARY WHISTLEBLOWER
                     </Text>
                   </Accordion.Control>
-                  <Accordion.Panel>{caseItem.describtion}</Accordion.Panel>
+                  <Accordion.Panel></Accordion.Panel>
+                  {caseItem.flaggerId == GlobalStore.userId ||
+                  caseItem.seconders.includes(GlobalStore.userId!) ? (
+                    caseItem.describtion
+                  ) : (
+                    <p className="">
+                      Descriptions can only be seen by Flaggers or Seconders
+                    </p>
+                  )}
                 </Accordion.Item>
                 {caseItem.seconders.length > 0 && (
                   <Accordion.Item value="best">
