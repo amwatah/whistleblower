@@ -1,47 +1,36 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "cockroachdb"
-    url      = env("DATABASE_URL")
-}
-
-model Flaggers {
-    id           String  @id @unique @default(uuid())
-    code         Int     @unique
-    county       String
-    constituency String
-    password     String
-    Cases        Cases[]
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model Cases {
-    id           String   @id @unique @default(uuid())
-    created      DateTime @default(now())
-    updated      DateTime @updatedAt
-    title        String
-    county       String
-    constituency String
-    case_type    String
-    describtion  String
-    image        String
-    seconders    String[]
-    status       Status
-    alleged      String
-    alleged_Role String
-    created_by   Flaggers @relation(fields: [flaggerId], references: [id])
-    flaggerId    String
-    validity     Float    @default(0)
+  created_at   DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at   DateTime? @default(now()) @db.Timestamptz(6)
+  title        String
+  county       String
+  constituency String
+  case_type    String
+  describtion  String
+  image        String
+  seconders    String[]
+  status       String
+  alleged      String
+  alleged_Role String
+  validity     Float     @default(0)
+  flaggerId    String    @db.Uuid
+  id           String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  Flaggers     Flaggers  @relation(fields: [flaggerId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
-enum Status {
-    ALLEGATION
-    INVESTIGATION
-    TRIAL
-    CONVICTED
-    CLOSED
+model Flaggers {
+  id           String  @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  code         BigInt  @unique
+  county       String
+  constituency String
+  password     String
+  Cases        Cases[]
 }

@@ -23,8 +23,11 @@ interface CaseCardMiniProps {
 function CaseCardMini(caseItem: CaseCardMiniProps) {
   const router = useRouter();
   return (
-    <Paper onClick={() => void router.push(`${STATSPAGE}/${caseItem.id}`)}>
-      <div className=" m-2 flex w-full flex-col leading-[5px]  shadow-2xl">
+    <Paper
+      onClick={() => void router.push(`${STATSPAGE}/${caseItem.id}`)}
+      className=" min-h-fulls"
+    >
+      <div className=" m-2 flex min-h-full w-full flex-col  shadow-2xl">
         <img
           src={caseItem.image}
           alt="image"
@@ -32,7 +35,7 @@ function CaseCardMini(caseItem: CaseCardMiniProps) {
         />
 
         <Group position="apart" className=" px-2">
-          <p className=" text-[12px] font-bold">{caseItem.title}</p>
+          <p className=" bold   font-bold">{caseItem.title}</p>
         </Group>
         <Rating
           defaultValue={

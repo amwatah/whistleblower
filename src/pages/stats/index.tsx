@@ -51,7 +51,7 @@ function StatsPage() {
             {allCases.data
               ?.filter((caseitem) => caseitem.county === selectedCounty)
               .map((singlecase) => (
-                <Carousel.Slide key={singlecase.id}>
+                <Carousel.Slide key={singlecase.id} className=" h-full">
                   <CaseCardMini {...singlecase} />
                 </Carousel.Slide>
               ))}
