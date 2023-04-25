@@ -79,15 +79,16 @@ function CaseInfoPage() {
                       PRIMARY WHISTLEBLOWER
                     </Text>
                   </Accordion.Control>
-                  <Accordion.Panel></Accordion.Panel>
-                  {caseItem.flaggerId == GlobalStore.userId ||
-                  caseItem.seconders.includes(GlobalStore.userId!) ? (
-                    caseItem.describtion
-                  ) : (
-                    <p className="">
-                      Descriptions can only be seen by Flaggers or Seconders
-                    </p>
-                  )}
+                  <Accordion.Panel>
+                    {caseItem.flaggerId == GlobalStore.userId ||
+                    caseItem.seconders.includes(GlobalStore.userId!) ? (
+                      <p className=" leading-8">{caseItem.describtion}</p>
+                    ) : (
+                      <p className="">
+                        Descriptions can only be seen by Flaggers or Seconders
+                      </p>
+                    )}
+                  </Accordion.Panel>
                 </Accordion.Item>
                 {caseItem.seconders.length > 0 && (
                   <Accordion.Item value="best">
